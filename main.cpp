@@ -2,6 +2,7 @@
 #include <sstream>
 #include <vector>
 #include <thread>
+#include <cstring>
 #include "BoundedBuffer.h"
 #include "Producer.h"
 #include "Dispatcher.h"
@@ -34,7 +35,7 @@ int main(int argc, char* argv[]) {
             producer_queue_sizes.push_back(std::stoi(line.substr(pos + 1)));
         } else if (line.find("Co-Editor queue size") != std::string::npos) {
             size_t pos = line.find("=");
-            co_editor_queue_size = std::stoi(line.substr(pos + 1)));
+            co_editor_queue_size = std::stoi(line.substr(pos + 1));
         }
     }
 

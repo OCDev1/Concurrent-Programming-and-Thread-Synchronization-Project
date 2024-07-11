@@ -1,7 +1,8 @@
 CXX = g++
 CXXFLAGS = -std=c++11 -pthread
-OBJS = main.o BoundedBuffer.o Producer.o Dispatcher.o CoEditor.o ScreenManager.o
+
 TARGET = ex3.out
+OBJS = main.o BoundedBuffer.o Producer.o Dispatcher.o CoEditor.o ScreenManager.o
 
 all: $(TARGET)
 
