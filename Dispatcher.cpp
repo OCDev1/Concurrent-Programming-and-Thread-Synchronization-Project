@@ -19,8 +19,12 @@ void Dispatcher::dispatch() {
                         news_queue.insert(msg);
                     } else if (std::strstr(msg, "WEATHER")) {
                         weather_queue.insert(msg);
+                    } else {
+                        // If message type is not recognized, free it
+                        delete[] msg;
                     }
                 } else {
+                    // Free the "DONE" message
                     delete[] msg;
                 }
             }
@@ -29,6 +33,12 @@ void Dispatcher::dispatch() {
     char* done_msg = new char[5];
     std::strcpy(done_msg, "DONE");
     sports_queue.insert(done_msg);
+
+    done_msg = new char[5];
+    std::strcpy(done_msg, "DONE");
     news_queue.insert(done_msg);
+
+    done_msg = new char[5];
+    std::strcpy(done_msg, "DONE");
     weather_queue.insert(done_msg);
 }
