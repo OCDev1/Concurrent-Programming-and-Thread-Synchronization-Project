@@ -9,18 +9,20 @@ void Dispatcher::dispatch() {
     while (!done) {
         done = true;
         for (auto &queue : producer_queues) {
-            char* msg = queue->remove();
-            if (strcmp(msg, "DONE") != 0) {
-                done = false;
-                if (std::strstr(msg, "SPORTS")) {
-                    sports_queue.insert(msg);
-                } else if (std::strstr(msg, "NEWS")) {
-                    news_queue.insert(msg);
-                } else if (std::strstr(msg, "WEATHER")) {
-                    weather_queue.insert(msg);
+            char* msg = queue->try_remove(); // Use non-blocking try_remove
+            if (msg != nullptr) {
+                if (strcmp(msg, "DONE") != 0) {
+                    done = false;
+                    if (std::strstr(msg, "SPORTS")) {
+                        sports_queue.insert(msg);
+                    } else if (std::strstr(msg, "NEWS")) {
+                        news_queue.insert(msg);
+                    } else if (std::strstr(msg, "WEATHER")) {
+                        weather_queue.insert(msg);
+                    }
+                } else {
+                    delete[] msg;
                 }
-            } else {
-                delete[] msg;
             }
         }
     }

@@ -1,38 +1,34 @@
 #include "BoundedBuffer.h"
+#include <mutex>
 #include <stdexcept>
 
-BoundedBuffer::BoundedBuffer(int size) : size(size) {
-    if (sem_init(&empty, 0, size) != 0) {
-        throw std::runtime_error("Failed to initialize semaphore");
-    }
-    if (sem_init(&full, 0, 0) != 0) {
-        throw std::runtime_error("Failed to initialize semaphore");
-    }
-    if (pthread_mutex_init(&mutex, nullptr) != 0) {
-        throw std::runtime_error("Failed to initialize mutex");
-    }
-}
 
-BoundedBuffer::~BoundedBuffer() {
-    sem_destroy(&empty);
-    sem_destroy(&full);
-    pthread_mutex_destroy(&mutex);
-}
+BoundedBuffer::BoundedBuffer(size_t capacity) : capacity(capacity) {}
 
-void BoundedBuffer::insert(char* s) {
-    sem_wait(&empty);
-    pthread_mutex_lock(&mutex);
-    buffer.push(s);
-    pthread_mutex_unlock(&mutex);
-    sem_post(&full);
+void BoundedBuffer::insert(char* item) {
+    std::unique_lock<std::mutex> lock(mutex);
+    not_full.wait(lock, [this]() { return buffer.size() < capacity; });
+    buffer.push(item);
+    not_empty.notify_one();
 }
 
 char* BoundedBuffer::remove() {
-    sem_wait(&full);
-    pthread_mutex_lock(&mutex);
-    char* s = buffer.front();
+    std::unique_lock<std::mutex> lock(mutex);
+    not_empty.wait(lock, [this]() { return !buffer.empty(); });
+    char* item = buffer.front();
     buffer.pop();
-    pthread_mutex_unlock(&mutex);
-    sem_post(&empty);
-    return s;
+    not_full.notify_one();
+    return item;
+}
+
+char* BoundedBuffer::try_remove() {
+    std::unique_lock<std::mutex> lock(mutex);
+    if (buffer.empty()) {
+        return nullptr;
+    } else {
+        char* item = buffer.front();
+        buffer.pop();
+        not_full.notify_one();
+        return item;
+    }
 }

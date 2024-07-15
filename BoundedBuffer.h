@@ -2,23 +2,22 @@
 #define BOUNDEDBUFFER_H
 
 #include <queue>
-#include <semaphore.h>
-#include <pthread.h>
+#include <mutex>
+#include <condition_variable>
 
 class BoundedBuffer {
-private:
-    int size;
-    std::queue<char*> buffer;
-    sem_t empty;
-    sem_t full;
-    pthread_mutex_t mutex;
-
 public:
-    BoundedBuffer(int size);
-    ~BoundedBuffer();
-
-    void insert(char* s);
+    BoundedBuffer(size_t capacity);
+    void insert(char* item);
     char* remove();
+    char* try_remove();
+
+private:
+    std::queue<char*> buffer;
+    std::mutex mutex;
+    std::condition_variable not_empty;
+    std::condition_variable not_full;
+    size_t capacity;
 };
 
 #endif // BOUNDEDBUFFER_H
