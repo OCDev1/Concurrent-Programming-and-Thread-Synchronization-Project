@@ -1,8 +1,8 @@
 #ifndef DISPATCHER_H
 #define DISPATCHER_H
 
-#include "BoundedBuffer.h"
 #include <vector>
+#include "BoundedBuffer.h"
 
 class Dispatcher {
 public:

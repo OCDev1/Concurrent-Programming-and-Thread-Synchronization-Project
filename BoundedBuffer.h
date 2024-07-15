@@ -11,6 +11,9 @@ public:
     void insert(char* item);
     char* remove();
     char* try_remove();
+    std::mutex& getMutex() {
+        return buffer_mutex;
+    }
 
 private:
     std::queue<char*> buffer;
@@ -18,6 +21,7 @@ private:
     std::condition_variable not_empty;
     std::condition_variable not_full;
     size_t capacity;
+    std::mutex buffer_mutex;
 };
 
 #endif // BOUNDEDBUFFER_H

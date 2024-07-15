@@ -7,6 +7,7 @@ void BoundedBuffer::insert(char* item) {
     std::unique_lock<std::mutex> lock(mutex);
     not_full.wait(lock, [this]() { return buffer.size() < capacity; });
     buffer.push(item);
+    lock.unlock(); // Unlock before notify to prevent potential deadlock
     not_empty.notify_one();
 }
 
@@ -15,6 +16,7 @@ char* BoundedBuffer::remove() {
     not_empty.wait(lock, [this]() { return !buffer.empty(); });
     char* item = buffer.front();
     buffer.pop();
+    lock.unlock(); // Unlock before notify to prevent potential deadlock
     not_full.notify_one();
     return item;
 }
