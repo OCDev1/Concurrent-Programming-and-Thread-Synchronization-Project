@@ -1,5 +1,4 @@
 #include "Dispatcher.h"
-#include <iostream>
 #include <cstring>
 
 Dispatcher::Dispatcher(std::vector<BoundedBuffer*> &producer_queues, BoundedBuffer &sports_queue, BoundedBuffer &news_queue, BoundedBuffer &weather_queue)
@@ -11,7 +10,7 @@ void Dispatcher::dispatch() {
         done = true;
         for (auto &queue : producer_queues) {
             char* msg = queue->remove();
-            if (std::strcmp(msg, "DONE") != 0) {
+            if (strcmp(msg, "DONE") != 0) {
                 done = false;
                 if (std::strstr(msg, "SPORTS")) {
                     sports_queue.insert(msg);
@@ -21,8 +20,6 @@ void Dispatcher::dispatch() {
                     weather_queue.insert(msg);
                 }
             } else {
-                // Print when "DONE" message is received
-                std::cout << "Dispatcher received 'DONE' from Producer." << std::endl;
                 delete[] msg;
             }
         }

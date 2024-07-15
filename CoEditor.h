@@ -1,10 +1,5 @@
 #ifndef COEDITOR_H
 #define COEDITOR_H
-#include <iostream>
-#include <thread>
-#include <random>
-#include <vector>
-#include <cstring>
 
 #include "BoundedBuffer.h"
 

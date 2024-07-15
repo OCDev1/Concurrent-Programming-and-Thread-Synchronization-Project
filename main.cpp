@@ -2,7 +2,7 @@
 #include <sstream>
 #include <vector>
 #include <thread>
-#include <cstring>
+#include <iostream>
 #include "BoundedBuffer.h"
 #include "Producer.h"
 #include "Dispatcher.h"
