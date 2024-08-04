@@ -18,6 +18,9 @@ This project is a concurrent programming simulation of a news broadcasting syste
 3. **Co-Editor**: Processes and edits news stories before sending them to the Screen Manager.
 4. **Screen Manager**: Displays the final news stories.
 
+## Flow chart
+![alt text](https://github.com/OCDev1/Concurrent-Programming-and-Thread-Synchronization-Project/blob/main/flow.png)
+
 ## File Structure
 
 - `main.cpp`: Entry point of the application.
